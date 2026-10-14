@@ -1,0 +1,29 @@
+# Bancos para desenvolvimento local do módulo Financeiro.
+#   docker compose up -d postgres   → PostgreSQL 16
+#   docker compose up -d mysql      → MySQL 8.4
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: financeiro
+      POSTGRES_PASSWORD: financeiro
+      POSTGRES_DB: erp
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./scripts/criar-banco-teste.sql:/docker-entrypoint-initdb.d/01-teste.sql:ro
+      - pgdata:/var/lib/postgresql/data
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: financeiro
+      MYSQL_PASSWORD: financeiro
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./scripts/permissoes-mysql.sql:/docker-entrypoint-initdb.d/01-permissoes.sql:ro
+      - mysqldata:/var/lib/mysql
+volumes:
+  pgdata:
+  mysqldata:
